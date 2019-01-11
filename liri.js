@@ -18,6 +18,14 @@ switch (action) {
   case "spotify-this-song":
     song();
     break;
+
+  case "movie-this":
+    movie();
+    break;
+  
+  case "do-what-it-says":
+    what();
+    break;
 }
 
 
@@ -90,4 +98,43 @@ function song() {
     console.log("Preview: " + data.tracks.items[0].preview_url);
     console.log("Album: " + data.tracks.items[0].album.name);
     });
+}
+
+function movie() {
+  var nodeArgs = process.argv;
+  var movieName = "";
+
+  if (nodeArgs.length < 4) {
+    movieName = "mr nobody"
+  } 
+  else {
+    for (var i = 3; i < nodeArgs.length; i++) {
+
+      if (i > 3 && i < nodeArgs.length) {
+        movieName = movieName + "+" + nodeArgs[i];
+      }
+      else {
+        movieName += nodeArgs[i];
+  
+      }
+    }
+  }
+
+  axios.get("http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy&tomatoes=true").then(
+    function(response) {
+      // console.log(response);
+      console.log("Title: " + response.data.Title);
+      console.log("Release Year: " + response.data.Year);
+      console.log("IMDB Rating: " + response.data.imdbRating);
+      console.log("Rotten Tomatoes Rating: " + response.data.tomatoRating);
+      console.log("Country: " + response.data.Country);
+      console.log("Language: " + response.data.Language);
+      console.log("Plot: " + response.data.Plot);
+      console.log("Actors: " + response.data.Actors);
+    }
+  );
+}
+
+function what() {
+
 }
