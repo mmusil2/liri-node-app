@@ -4,6 +4,7 @@ var axios = require("axios");
 var moment = require('moment');
 var Spotify = require('node-spotify-api');
 var keys = require("./keys.js");
+var fs = require("fs");
 
 var spotify = new Spotify(keys.spotify);
 
@@ -43,6 +44,11 @@ function concerts() {
 
     }
   }
+
+  // console.log(artistName);
+  // console.log(JSON.stringify(artistName));
+  // newname = JSON.stringify(artistName);
+  // console.log(newname.replace(/['"]+/g, ''))
 
   axios.get("https://rest.bandsintown.com/artists/" + artistName + "/events?app_id=codingbootcamp").then(
     function(response) {
@@ -136,5 +142,33 @@ function movie() {
 }
 
 function what() {
+  fs.readFile("random.txt", "utf8", function(err, data) {
+    if (err) {
+      return console.log(err);
+    }
 
+    // console.log(data);
+    data = data.split(",");
+    // console.log(data);
+    // console.log(data[0]);
+    // console.log(data[1]);
+    
+    action = data[0];
+    process.argv[3] = data[1];
+    switch (action) {
+      case "concert-this":
+        // method below removes quotation marks from artist name string
+        process.argv[3] = data[1].replace(/['"]+/g, '')
+        concerts();
+        break;
+    
+      case "spotify-this-song":
+        song();
+        break;
+    
+      case "movie-this":
+        movie();
+        break;
+    }
+  });
 }
